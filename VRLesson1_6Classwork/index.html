@@ -4,11 +4,17 @@
   </head>
   <body>
     <a-scene>
-<!-- Challenge
-    Add an asset manager that preloads images for the ids below which are being referenced throughout the VR world. 
-IDs: spiderskin, rock, spidereye, cave, and bk          
--->
-
+      <!-- Challenge
+      Add an asset manager that preloads images for the ids below which are being referenced throughout the VR world. 
+      IDs: spiderskin, rock, spidereye, cave, and bk          
+      -->
+      <a-assets>
+        <img src="cave1.jpg" id="cave"/>
+        <img src="web.png" id="bk"/>
+        <img src="spiderskin2.jpg" id="spiderskin"/>
+        <img src="spidereye2.jpg" id="spidereye"/>
+        <img src="cave2.jpg" id="rock"/>
+      </a-assets>
 
       <a-sky src="#bk" repeat="6 6"></a-sky>
       <a-plane src="#cave" repeat="6 6" position="0 0 -2" width="150" height="150" rotation="-90 0 0"></a-plane>
