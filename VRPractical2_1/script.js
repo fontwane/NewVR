@@ -28,7 +28,26 @@ window.addEventListener("DOMContentLoaded",function() {
 
 function createCloud(x, y, z){
   let cloud = document.createCloud("a-entity");
+  let c1 = document.createElement("a-sphere");
+  c1.setAttribute("color", "white");
+  c1.setAttribute("position", "0 10 0");
+  c1.setAttribute("radius", "0.5");
+  cloud.append( c1 );
+
+  let c2 = document.createElement("a-sphere");
+  c2 = setAttribute("color", "white");
+  c2 = setAttribute("position", "0.5 5 0");
+  c2 = setAttribute("radius", "0.4");
+  cloud.append( c2 );
   
+  let c3 = document.createElement("a-sphere");
+  c3.setAttribute("color", "white");
+  c3.setAttribute("position", "-0.5 0.1 0");
+  c3.setAttribute("radius", "0.4");
+  cloud.append( c3 );
+
+  cloud.setAttribute("postion", {x:x, y:y, z:z});
+  scene.append( cloud )
 }
 
 /* Task 3: Create a function createHouse that,
