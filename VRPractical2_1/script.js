@@ -43,7 +43,7 @@ window.addEventListener("DOMContentLoaded",function() {
 */
 
 function createCloud(x, y, z){
-  // create an entity to hold the cloud parts
+
   let cloud = document.createElement("a-entity");
 
   let c1 = document.createElement("a-sphere");
@@ -64,7 +64,7 @@ function createCloud(x, y, z){
   c3.setAttribute("radius", "0.5");
   cloud.append( c3 );
 
-  // position the cloud entity and add it to the scene
+  
   cloud.setAttribute("position", {x:x, y:y, z:z});
   scene.append( cloud );
 }
