@@ -12,19 +12,19 @@ window.addEventListener("DOMContentLoaded",function() {
     let z = rnd(-20,20);
     createTree(x,0,z);
   }
-  // add some clouds
+  
   createCloud(-8, 8, -10);
   createCloud(0, 9, -5);
   createCloud(8, 7, -12);
-  // add many random clouds for a fuller sky
+ 
   for (let i = 0; i < 100; i++) {
     let x = rnd(-20, 30);
-    // use a small float range for height so clouds sit in the sky
-    let y = Math.random() * 4 + 6; // between 6 and 10
+   
+    let y = Math.random() * 4 + 6; 
     let z = rnd(-20, 20);
     createCloud(x, y, z);
   }
-  // add some houses
+ 
   createHouse(-8, 6);
   createHouse(6, 8);
   createHouse(12, -4);
@@ -91,8 +91,7 @@ function createHouse(x, z){
 
   let roof = document.createElement("a-cylinder");
   roof.setAttribute("color","red");
-  // base top is at 1.0 (base center 0.5 + height/2 = 0.5),
-  // cylinder height 1.5 -> center should be 1.0 + 1.5/2 = 1.75
+
   roof.setAttribute("position","0 1.75 0");
   roof.setAttribute("radius","0.75");
   roof.setAttribute("height","1.5");
@@ -128,7 +127,7 @@ function createTree(x, y, z){
 function createHouse(x, z){
   let house = document.createElement('a-entity');
 
-  // base of the house
+
   let base = document.createElement('a-box');
   base.setAttribute('width', 2);
   base.setAttribute('height', 1.5);
@@ -137,17 +136,16 @@ function createHouse(x, z){
   base.setAttribute('position', '0 0.75 0');
   house.append(base);
 
-  // roof - use a cone for a simple triangular roof
+
   let roof = document.createElement('a-cone');
   roof.setAttribute('radius-bottom', 1.4);
   roof.setAttribute('height', 1);
   roof.setAttribute('color', '#8B0000');
-  // base top Y = 1.5 (base center 0.75 + height/2 = 1.5)
-  // cone height 1 -> center = 1.5 + 0.5 = 2.0
+  
   roof.setAttribute('position', '0 2 0');
   house.append(roof);
 
-  // optional door
+
   let door = document.createElement('a-box');
   door.setAttribute('width', 0.4);
   door.setAttribute('height', 0.8);
