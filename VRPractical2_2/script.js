@@ -27,7 +27,7 @@ function loop(){
 
     rocket.setAttribute("position", {x:3, y:a, z:-4});
 
-    dude.setAttribute("scale", {x: 2, y: 2, z: 2 });
+    dude.setAttribute("scale", {x: a, y: a, z: a});
     dude.setAttribute("position", {x:-2, y:1.5, z:-10}); 
 
     
