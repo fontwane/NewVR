@@ -1,68 +1,74 @@
-class Rocket{
-    constructor(x,y,z){
-        this.x=x;
-        this.y=y;
-        this.a=y;
-        this.da = 0.1;
-        this.z=z;
 
-        this.rocket=document.createElement("a-entity");
+class Rocket {
+  constructor(x = 0, y = 0, z = 0) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.speed = Math.random() * 0.06 + 0.02;
 
-        let body=document.createElement("a-cylinder");
-        body.setAttribute("radius","1.2");
-        body.setAttribute("height","10");
-        body.setAttribute("position",{x:0,y:5,z:0});
-        body.setAttribute("color","gray");
-        this.rocket.append(body);
+    this.el = document.createElement('a-entity');
 
-        let cone=document.createElement("a-cone");
-        cone.setAttribute("radius-bottom","1.2");
-        cone.setAttribute("height","3");
-        cone.setAttribute("position",{x:0,y:11.5,z:0});
-        cone.setAttribute("color","red");
-        this.rocket.append(cone);
 
-        let fin1=document.createElement("a-box");
-        fin1.setAttribute("width","0.1");
-        fin1.setAttribute("depth","0.5");
-        fin1.setAttribute("height","2");
-        fin1.setAttribute("position",{x:0,y:0.5,z:-1.2});
-        fin1.setAttribute("rotation",{x:15,y:0,z:0});
-        fin1.setAttribute("color","orange");
-        this.rocket.append(fin1);
+    let body = document.createElement('a-cylinder');
+    body.setAttribute('radius', 0.3);
+    body.setAttribute('height', 1.8);
+    body.setAttribute('color', 'gray');
+    body.setAttribute('position', `0 ${0.9} 0`);
+    this.el.appendChild(body);
 
-        let fin2=document.createElement("a-box");
-        fin2.setAttribute("width","0.1");
-        fin2.setAttribute("depth","0.5");
-        fin2.setAttribute("height","2");
-        fin2.setAttribute("position",{x:0,y:0.5,z:1.2});
-        fin2.setAttribute("rotation",{x:0,y:0,z:15});
-        fin2.setAttribute("color","orange");
-        this.rocket.append(fin2);
+   
+    let nose = document.createElement('a-cone');
+    nose.setAttribute('radius-bottom', 0.6);
+    nose.setAttribute('height', 0.8);
+    nose.setAttribute('color', 'red');
+    nose.setAttribute('position', `0 ${1.8} 0`);
+    this.el.appendChild(nose);
 
-        let fin3=document.createElement("a-box");
-        fin3.setAttribute("width","0.1");
-        fin3.setAttribute("depth","0.5");
-        fin3.setAttribute("height","2");
-        fin3.setAttribute("position",{x:-1.2,y:0.5,z:0});
-        fin3.setAttribute("rotation",{x:-15,y:0,z:0});
-        fin3.setAttribute("color","orange");
-        this.rocket.append(fin3);
+ 
+    let tail = document.createElement('a-cone');
+    tail.setAttribute('radius-bottom', 0.35);
+    tail.setAttribute('height', 0.8);
+    tail.setAttribute('color', 'orange');
+    tail.setAttribute('rotation', '-180 0 0');
+    tail.setAttribute('position', `0 ${-0.4} 0`);
+    this.el.appendChild(tail);
 
-        
-
-        
-
-       
-
-        this.rocket.setAttribute("position",{x:x,y:y,z:z});
-        scene.append(this.rocket);
+  
+    for (let i = 0; i < 3; i++) {
+      const fin = document.createElement('a-box');
+      fin.setAttribute('width', 0.05);
+      fin.setAttribute('height', 0.4);
+      fin.setAttribute('depth', 0.5);
+      fin.setAttribute('color', 'orange');
+      let angle = (i / 3) * 360;
+      fin.setAttribute('position', { x: Math.cos((angle*Math.PI)/180) * 0.5, y: 0, z: Math.sin((angle*Math.PI)/180) * 0.5 });
+      fin.setAttribute('rotation', { x: 15, y: angle, z: 0 });
+      this.el.appendChild(fin);
     }
 
+ 
+    let flame = document.createElement('a-cone');
+    flame.setAttribute('radius-bottom', 0.4);
+    flame.setAttribute('height', 0.9);
+    flame.setAttribute('color', '#FF8C00');
+    flame.setAttribute('opacity', 0.8);
+    flame.setAttribute('rotation', '-180 0 0');
+    flame.setAttribute('position', `0 ${-1.0} 0`);
+    this.el.appendChild(flame);
 
-}
+   
+    this.el.setAttribute('position', { x: this.x, y: this.y, z: this.z });
+    let sceneEl = document.querySelector('a-scene');
+    if (sceneEl) sceneEl.appendChild(this.el);
+    else window.addEventListener('DOMContentLoaded', () => document.querySelector('a-scene').appendChild(this.el));
+  }
 
-fly(){
-    this.a += this.da;
-    this.obj.setAttribute("position",{x:this.x, y:this.a, z:this.z });
+
+  launch(){
+    this.y += this.speed;
+    this.el.setAttribute('position', { x: this.x, y: this.y, z: this.z });
+
+
+   
+  }
 }
