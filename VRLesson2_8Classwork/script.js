@@ -12,6 +12,6 @@ function loop(){
   target.a += target.da;
 
   target.setAttribute("rotation",{x:target.a, y:0, z: 0});
-
+  // target.object3D.rotation.x = this.a;
   window.requestAnimationFrame( loop );
 }
