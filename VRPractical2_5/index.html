@@ -1,4 +1,4 @@
-<html>
+        <html>
   <head>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="script.js"></script>
@@ -9,11 +9,76 @@
         <!-- Challenge
              Upload a picture to use as the texture for the walls of your maze if you want
         -->
+             <img src="wall_texture.jpg" id="wall"> 
       </a-assets>
       <a-plane position="0 0 0" rotation="-90 0 0" width="150" height="150" color="#AAFFAA"></a-plane>
+      <a-entity position="0 0 0" id="maze">
+        <!-- Outer walls -->
+        <a-box src="#wall" position="0 1 -25" width="50" height="2" depth="1" color="#333333"></a-box>
+        <a-box src="#wall" position="0 1 27" width="50" height="2" depth="1" color="#333333"></a-box>
+        
+        <!-- Left wall with ENTRANCE gap in the middle -->
+        <a-box src="#wall" position="-25 1 -10" width="1" height="2" depth="30" color="#333333"></a-box>
+        <a-box src="#wall" position="-25 1 20" width="1" height="2" depth="13" color="#333333"></a-box>
+        
+        <!-- Right wall with EXIT gap in the middle -->
+        <a-box src="#wall" position="25 1 -15" width="1" height="2" depth="20" color="#333333"></a-box>
+        <a-box src="#wall" position="25 1 14" width="1" height="2" depth="25" color="#333333"></a-box>
+
+        <!-- Inner maze walls - horizontal sections -->
+        <!-- <a-box src="#wall" position="8 1 -15" width="10" height="2" depth="1" color="#666666"></a-box> -->
+       
+        <!-- <a-box src="#wall" position="10 1 -15" width="2" height="2" depth="1" color="#666666"></a-box> -->
+        
+        <a-box src="#wall" position="18 1 12" width="13" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="21.5 1 -5.5" width="6" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="17 1 21" width="5" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="16 1 -5.5" width="9" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="17.5 1 -14" width="4" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="22.5 1 -19" width="4" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="8 1 -1" width="9" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="5.5 1 7" width="4" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="10 1 3" width="4" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="10 1 12" width="4" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="4 1 19.5" width="9" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="5 1 -20" width="5" height="2" depth="1" color="#666666"></a-box>
+        <a-box src="#wall" position="1 1 -15" width="5" height="2" depth="1" color="#666666"></a-box> 
+        <a-box src="#wall" position="-1 1 14" width="9" height="2" depth="1" color="#666666"></a-box>
+        
+
+
+        <!-- <a-box src="#wall" position="-5 1 -10" width="10" height="2" depth="1" color="#666666"></a-box> -->
+
+        <!-- Inner maze walls - vertical sections -->
+        <a-box src="#wall" position="-15 1 -5" width="1" height="2" depth="20" color="#666666"></a-box>
+        <!-- <a-box src="#wall" position="5 1 5" width="1" height="2" depth="15" color="#666666"></a-box> -->
+
+        <a-box src="#wall" position="19 1 0" width="1" height="2" depth="10" color="#666666"></a-box>
+        <!-- <a-box src="#wall" position="12 1 16" width="1" height="2" depth="8" color="#666666"></a-box> -->
+        <a-box src="#wall" position="15 1 24" width="1" height="2" depth="5" color="#666666"></a-box>
+        <a-box src="#wall" position="12 1 6" width="1" height="2" depth="13" color="#666666"></a-box>
+        <a-box src="#wall" position="19 1 -10" width="1" height="2" depth="8" color="#666666"></a-box>
+        <a-box src="#wall" position="15 1 -17" width="1" height="2" depth="7" color="#666666"></a-box>
+        <a-box src="#wall" position="4 1 3" width="1" height="2" depth="7" color="#666666"></a-box>
+        <a-box src="#wall" position="8.5 1 16" width="1" height="2" depth="8" color="#666666"></a-box>
+        <a-box src="#wall" position="8 1 -11" width="1" height="2" depth="19" color="#666666"></a-box>
+        <a-box src="#wall" position="-1 1 -20" width="1" height="2" depth="9" color="#666666"></a-box>
+        <a-box src="#wall" position="-5 1 19" width="1" height="2" depth="17" color="#666666"></a-box>
+
+        <a-box src="#wall" position="-1 1 1" width="1" height="2" depth="17" color="#666666"></a-box>
+
+        <a-box src="#wall" position="3 1 -10" width="1" height="2" depth="10" color="#666666"></a-box>
+
+
+
+
+
       
+
+      </a-entity>
+
       
       <a-sky color="blue"></a-sky>
-      <a-camera position="0 1.3 0"> 
+      <a-camera position="35 20 0"> 
       </a-camera>
 </html>
