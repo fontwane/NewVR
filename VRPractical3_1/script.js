@@ -6,11 +6,24 @@ window.addEventListener("DOMContentLoaded",function() {
   carousel.dr = 1;
   /* Challenge 1: Make the carousel rotate only when the mouse is on it.  Hint: Manipulate a flag called "rotate" between true and false. 
    Two event listeners required. */
+  carousel.rotate = false;
+  carousel.addEventListener("mouseenter", function(){
+    carousel.rotate = true;
+  });
+  carousel.addEventListener("mouseleave", function(){
+    carousel.rotate = false;
+  });
+
+
   
   balloon1 = document.getElementById("balloon1"); //blue
   balloon1.y = 5
   balloon1.dy = -0.05;
   /* Challenge 2: Make balloon1 fall when the user clicks on the balloon. Hint: Set a "flag" to true when the user clicks on balloon1 */
+  balloon1.fall = false;
+  balloon1.addEventListener("click", function(){
+    balloon1.fall = true;
+  });  
   
   surpriseBox = document.getElementById("surpriseBox"); //white box with red balloon
   /* Challenge 4: Make the red balloon "fly" up when you click on the surprise box.  

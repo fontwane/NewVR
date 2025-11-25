@@ -1,6 +1,5 @@
 let scene;
 let snowmen = [];
-let ufos = [];
 let snowflakes=[];
 
 window.addEventListener("DOMContentLoaded",function() {
@@ -28,6 +27,9 @@ function loop(){
   for(let i = 0; i < snowmen.length; i++){
     snowmen[i].update();
   }
+
+
+
 
   for (let flake of snowflakes) {
     flake.fall();

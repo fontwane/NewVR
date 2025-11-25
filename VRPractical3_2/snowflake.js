@@ -9,6 +9,10 @@ class Snowflake{
     this.obj.setAttribute("opacity",0.65);
     this.obj.setAttribute("position",{x:x,y:y,z:z});
     scene.append( this.obj );
+
+    this.obj.addEventListener("click", () => {
+      this.obj.setAttribute("opacity",0);
+    });
   }
 
   fall(){
