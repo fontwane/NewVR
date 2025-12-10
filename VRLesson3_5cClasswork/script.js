@@ -30,6 +30,8 @@ function loop(){
     }
   }
 
+  
+
   if(dart){
     dart.fly();
   }

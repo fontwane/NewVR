@@ -2,13 +2,52 @@
   <head>
     <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
     <script src="bullet.js"></script>
+    <script src="snowman.js"></script>
+    <script src="dart.js"></script>
     <script src="script.js"></script>
   </head>
   <body>
     <a-scene>
       <a-plane position="0 0 -4" rotation="-90 0 0" width="40" height="40" color="#7BC8A4"></a-plane>
       <a-sky color="#ECECEC"></a-sky>
-      <a-camera position="0 1.6 0"></a-camera>
+      <a-camera position="0 1.6 0">
+        <cursor></cursor>
+        <!-- Score text -->
+        <a-entity id="scoreText" text="value: Score: 0; color: black; width: 4" position="-1.5 1 -2"></a-entity>
+        <!-- Ammo text -->
+        <a-entity id="ammoText" text="value: Ammo: 1000; color: black; width: 3" position="-1.5 0.6 -2"></a-entity>
+        
+        <!-- <a-entity id="hitMessage" text="value: Score; color: red; align: center; width: 2.5" position="0 -0.5 -1" visible="false"></a-entity> -->
+      </a-camera>
+
+      <a-entity id="snowman" position="0 0 0" style="display:none">
+        <!-- Body -->
+        <a-sphere position="0 0.5 -0.5" radius="1.25" color="white"></a-sphere>
+        <a-sphere position="0 2.25 -0.5" radius="1.05" color="white"></a-sphere>
+        <a-sphere position="0 3.5 -0.5" radius=".85" color="white"></a-sphere>
+        <!-- Eyes -->
+        <a-sphere position="-0.25 3.5 0.25" radius=".15" color="black"></a-sphere>
+        <a-sphere position="0.25 3.5 0.25" radius=".15" color="black"></a-sphere>
+        <!-- Nose and Arms -->
+        <a-cone position="0 3.25 0.5" rotation="90 0 0" color="tomato" height="0.5" radius-bottom=".1" radius-top="0.01"></a-cone>
+        <a-cylinder position="-1.25 2.75 -0.25" color="#A52A2A" rotation="0 0 60" height="2" radius="0.15"></a-cylinder>
+        <a-cylinder position="1.25 2.75 -0.25" color="#A52A2A" rotation="0 0 -60" height="2" radius="0.15"></a-cylinder>
+      </a-entity>
+
+      <a-entity position="-3 0 -3" rotation="0 15 0">
+        <!-- Body -->
+        <a-sphere position="0 0.5 -0.5" radius="1.25" color="white"></a-sphere>
+        <a-sphere position="0 2.25 -0.5" radius="1.05" color="white"></a-sphere>
+        <a-sphere position="0 3.5 -0.5" radius=".85" color="white"></a-sphere>
+        <!-- Eyes -->
+        <a-sphere position="-0.25 3.5 0.25" radius=".15" color="black"></a-sphere>
+        <a-sphere position="0.25 3.5 0.25" radius=".15" color="black"></a-sphere>
+        <!-- Nose and Arms -->
+        <a-cone position="0 3.25 0.5" rotation="90 0 0" color="tomato" height="0.5" radius-bottom=".1" radius-top="0.01"></a-cone>
+        <a-cylinder position="-1.25 2.75 -0.25" color="#A52A2A" rotation="0 0 60" height="2" radius="0.15"></a-cylinder>
+        <a-cylinder position="1.25 2.75 -0.25" color="#A52A2A" rotation="0 0 -60" height="2" radius="0.15"></a-cylinder>
+      </a-entity>
+
     </a-scene>
   </body>
 </html>
