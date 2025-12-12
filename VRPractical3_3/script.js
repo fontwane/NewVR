@@ -1,134 +1,253 @@
 let rnd = (l,u) => Math.random() * (u-l) + l
-let scene, camera, bullet, enemies = [], ammo_boxes = [], ammo_count = 1000, enemy_killed = 0;
+let scene, camera, bullets = [], enemies = [], ammo_boxes = [], ammo_count = 1000, enemy_killed = 0;
 let snowmen = [];
-let darts = [];
+let trees = [];
+let snowflakes = [];
+
 let hitMessageEl = null;
 let ammoTextEl = null;
+let timerTextEl = null;
+let remainingTime = 180; // seconds (3 minutes)
+let gameOver = false;
+let scoreTextEl = null;
 
 window.addEventListener("DOMContentLoaded",function() {
   scene = document.querySelector("a-scene");
   camera = document.querySelector("a-camera");
 
-  
-  window.onclick = ()=>{
-    dart = new Dart();
-  }
-
-  for(let i = 0; i < 20; i++){
-    let x = rnd(-20,20);
-    let z = rnd(-20,20);
-    snowmen.push(new Snowman(x,z));
-  }
-
-  // Create dart on click (allow multiple darts) — only if ammo remains
-  window.addEventListener('click', () => {
-    if (ammo_count <= 0) return;
-    let d = new Dart();
-    darts.push(d);
-    ammo_count = Math.max(0, ammo_count - 1);
-    if (ammoTextEl) ammoTextEl.setAttribute('text', { value: 'Ammo: ' + ammo_count, color: 'black', width: 3 });
-  });
-
- 
-  
-
-  // cache the hit message element
-  // hitMessageEl = document.getElementById('hitMessage');
-  ammoTextEl = document.getElementById('ammoText');
+  hitMessageEl = document.getElementById("hitMessage");
+  ammoTextEl = document.getElementById("ammoText");
+  timerTextEl = document.getElementById("timerText");
+  scoreTextEl = document.getElementById("scoreText");
   // initialize ammo display
-  if (ammoTextEl) ammoTextEl.setAttribute('text', { value: 'Ammo: ' + ammo_count, color: 'black', width: 3 });
-    
-  setTimeout(loop,100);
-  setTimeout(countdown,100);
-})
+  updateAmmoText();
+  updateScoreText();
+  
+  // Register clicks on the A-Frame scene so cursor/VR clicks work
+  scene.addEventListener("click", fireBullet);
 
-function loop(){
-  // if(bullet){
-  //   bullet.fire();
-  // }
-  for(let snowman of snowmen){
-    if(dart && distance(snowman.obj,dart.obj) < 1){
-      snowman.obj.setAttribute("opacity",0);
+  for(let i = 0; i < 50; i++){
+    let x = rnd(-80,80);
+    let z = rnd(-80,80);
+    snowmen.push(new Snowman(x, 0, z));
+  }
+  
+  // Spawn trees around the play area using the HTML tree template
+  let treeTemplate = document.getElementById('tree');
+  if(treeTemplate){
+    for(let i=0;i<150;i++){
+      let x = rnd(-80,80);
+      let z = rnd(-80,80);
+      let clone = treeTemplate.cloneNode(true);
+      if(clone.hasAttribute && clone.hasAttribute('id')) clone.removeAttribute('id');
+      if(clone.hasAttribute && clone.hasAttribute('style')) clone.removeAttribute('style');
+      clone.setAttribute('position', {x:x, y:0, z:z});
+      scene.appendChild(clone);
+      trees.push(clone);
     }
   }
 
-  if(dart){
-    dart.fly(); 
+  // Spawn snowflakes for falling effect
+  let plane = document.querySelector('a-plane');
+  let ppos = plane ? plane.getAttribute('position') : {x:0,z:0};
+  let w = plane ? parseFloat(plane.getAttribute('width')) || 150 : 150;
+  let h = plane ? parseFloat(plane.getAttribute('height')) || 150 : 150;
+  for(let i=0;i<200;i++){
+    let x = (Math.random() * w) - w/2 + ppos.x;
+    let z = (Math.random() * h) - h/2 + ppos.z;
+    let y = Math.random() * 8 + 6;
+    snowflakes.push(new Snowflake(x,y,z));
   }
-  //  for (Snowman of snowmen) {
-  //     Snowman.update();
-  //   }
+
+ for(let i = 0;i < 100;i++ ){
+    let e = new Snowman("snowman",{x:rnd(-50,50),y:0.5,z:rnd(-50,50)})
+    enemies.push(e);
+    
+    
+  }
+
+  // Spawn some ammo boxes around the scene
+  if (typeof AmmoBox !== 'undefined'){
+    for(let i=0;i<50;i++){
+      let x = rnd(-80,80);
+      let z = rnd(-80,80);
+      let box = new AmmoBox(x, 0.5, z);
+      ammo_boxes.push(box);
+      // console.log('Spawned ammo box', i, 'at', x, z);
+    }
+  }
+
+  
+
+  
+  setTimeout(loop,100);
+  // initialize timer display and start countdown
+  updateTimerText();
+  setTimeout(countdown,1000);
+})
+
+let keysPressed = {};
+
+// Helper: update on-screen ammo text
+function updateAmmoText(){
+  if(typeof ammoTextEl !== 'undefined' && ammoTextEl){
+    ammoTextEl.setAttribute('text','value: Ammo: ' + ammo_count + '; color: black; width: 3');
+  }
+}
+
+function showMessage(msg){
+  // hide text message and show appropriate image if available
+  if(typeof hitMessageEl !== 'undefined' && hitMessageEl){
+    hitMessageEl.setAttribute('visible', false);
+  }
+  const winImg = document.getElementById('winImage');
+  const loseImg = document.getElementById('loseImage');
+  if(msg === 'You Win'){
+    if(winImg) winImg.setAttribute('visible', true);
+    if(loseImg) loseImg.setAttribute('visible', false);
+  } else if(msg === 'You Lose'){
+    if(loseImg) loseImg.setAttribute('visible', true);
+    if(winImg) winImg.setAttribute('visible', false);
+  } else {
+    // fallback to text for other messages
+    if(typeof hitMessageEl !== 'undefined' && hitMessageEl){
+      hitMessageEl.setAttribute('text','value: ' + msg + '; color: red; align: center; width: 2.5');
+      hitMessageEl.setAttribute('visible', true);
+    }
+  }
+  gameOver = true;
+  // disable further firing
+  try{ scene.removeEventListener('click', fireBullet); }catch(e){}
+}
+
+// Helper: update on-screen score text
+function updateScoreText(){
+  if(typeof scoreTextEl !== 'undefined' && scoreTextEl){
+    scoreTextEl.setAttribute('text','value: Score: ' + enemy_killed + '; color: black; width: 4');
+  }
+}
+
+// Helper: centralize firing logic so every fire path decrements ammo
+function fireBullet(){
+  if(gameOver) return;
+  if(ammo_count > 0){
+    let b = new Bullet();
+    bullets.push(b);
+    ammo_count--;
+    updateAmmoText();
+  }
+}
+
+// Helper: update timer display (mm:ss)
+function updateTimerText(){
+  if(typeof timerTextEl !== 'undefined' && timerTextEl){
+    let mm = String(Math.floor(remainingTime/60)).padStart(2,'0');
+    let ss = String(remainingTime % 60).padStart(2,'0');
+    timerTextEl.setAttribute('text','value: ' + mm + ':' + ss + '; color: black; width: 3');
+  }
+}
+
+window.addEventListener("keydown",function(e){
+  keysPressed[e.key] = true;
+  
+  //User can only fire with they press the spacebar and have sufficient ammo
+  if(e.key == " "){
+    fireBullet();
+  }
+  if(e.key == "r"){
+    ammo_count = 10;
+  }
+})
+
+window.addEventListener("keyup",function(e){
+  keysPressed[e.key] = false;
+})
+
+function loop(){
+  if(gameOver){
+    // still render one last frame but don't process game logic
+    window.requestAnimationFrame(loop);
+    return;
+  }
 
   // Update snowmen
   for(let i = 0; i < snowmen.length; i++){
     snowmen[i].update();
   }
 
-  // Update darts and check collisions (iterate backwards when removing)
-  for (let i = darts.length - 1; i >= 0; i--) {
-    let d = darts[i];
-    if (d) d.fly();
-
-    // check collision against snowmen
-    for (let j = snowmen.length - 1; j >= 0; j--) {
-      let s = snowmen[j];
-      // use DOM elements for distance calculation
-      if (d && s && d.obj && s.snowman) {
-      let dist = distance(s.snowman, d.obj);
-      if (dist < 1.5) {
-          // remove ALL cloned snowmen on hit
-          // let clones = document.querySelectorAll('.snowman-clone');
-          // let removed = 0;
-          clones.forEach(c => {
-            if (c.parentNode) { c.parentNode.removeChild(c); removed++; }
-          });
-          // clear snowmen array
-          snowmen.length = 0;
-          // remove dart
-          if (d.obj.parentNode) d.obj.parentNode.removeChild(d.obj);
-          darts.splice(i, 1);
-          // update stats: count all removed as kills
-          enemy_killed += removed;
-          let scoreText = document.getElementById('scoreText');
-          if (scoreText) scoreText.setAttribute('text', { value: 'Score: ' + enemy_killed, color: 'black', width: 4 });
-          // show temporary hit message with counts
-          // if (hitMessageEl) showHitMessage(`All snowmen removed! +${removed} Score: ${enemy_killed} Ammo: ${ammo_count}`);
-          // break; // dart gone, break out to next dart
-        }
-      }
-    }
+  // Update snowflakes (fall)
+  for(let i=0;i<snowflakes.length;i++){
+    try{ snowflakes[i].fall(); }catch(e){}
   }
 
-  // Check single bullet collisions (if a bullet exists)
-  // if (bullet && bullet.obj) {
-  //   for (let j = snowmen.length - 1; j >= 0; j--) {
-  //     let s = snowmen[j];
-  //     if (s && s.snowman) {
-  //       let dist = distance(s.snowman, bullet.obj);
-  //       if (dist < 1.0) {
-  //         // remove ALL cloned snowmen on bullet hit
-          
-  //         snowmen.length = 0;
-  //         if (bullet.obj.parentNode) bullet.obj.parentNode.removeChild(bullet.obj);
-  //         bullet = null;
-  //         // update stats
-  //         enemy_killed += removed;
-  //         let scoreText = document.getElementById('scoreText');
-  //         if (scoreText) scoreText.setAttribute('text', { value: 'Score: ' + enemy_killed, color: 'black', width: 4 });
-          
-  //       }
-  //     }
-  //   }
-  // }
+  // Check for player collecting ammo boxes
+  for(let i = 0; i < ammo_boxes.length; i++){
+    try{
+      if(distance(camera, ammo_boxes[i].obj) < 2){
+        // collect
+        ammo_count += 10;
+        updateAmmoText();
+        console.log('Collected ammo box at', ammo_boxes[i].obj.getAttribute('position'));
+        ammo_boxes[i].remove();
+        ammo_boxes.splice(i,1);
+        i--;
+      }
+    }catch(e){ /* ignore removed nodes */ }
+  }
 
+  bullets.forEach((b,i)=>{
+
+    b.fire();
+    let bulletHit = false;
+    
+    // Check collision with snowmen
+    for(let j = 0; j < snowmen.length; j++){
+      if(snowmen[j].alive && distance(b.obj, snowmen[j].snowman) < 3){
+        snowmen[j].remove();
+        enemy_killed++;
+        updateScoreText();
+        bulletHit = true;
+        break;
+      }
+    }
+    
+    if(bulletHit || (distance(b.obj,camera)>200)){
+      bullets.splice(i,1)
+      b.obj.parentNode.removeChild(b.obj);
+    }
+  })
+
+  // Check win: no alive snowmen left
+  let aliveCount = 0;
+  for(let i=0;i<snowmen.length;i++) if(snowmen[i].alive) aliveCount++;
+  if(aliveCount === 0){
+    showMessage('You Win');
+  }
+
+  
   window.requestAnimationFrame(loop);
 }
 
 
 
 function countdown(){
-
-  setTimeout(countdown,1000);
+  if(typeof remainingTime === 'undefined') return;
+  if(remainingTime > 0){
+    remainingTime--;
+    updateTimerText();
+    setTimeout(countdown,1000);
+  } else {
+    remainingTime = 0;
+    updateTimerText();
+    // time's up - check win/lose
+    let aliveCount = 0;
+    for(let i=0;i<snowmen.length;i++) if(snowmen[i].alive) aliveCount++;
+    if(aliveCount === 0){
+      showMessage('You Win');
+    } else {
+      showMessage('You Lose');
+    }
+  }
 }
 
 function distance(obj1,obj2){
